@@ -7,7 +7,7 @@
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Web Application',
+	'name'=>'yiiVote',
 
 	// preloading 'log' component
 	'preload'=>array('log'),
@@ -34,7 +34,9 @@ return array(
 	'components'=>array(
 		'user'=>array(
 			// enable cookie-based authentication
-			'allowAutoLogin'=>true,
+			//Ullman - r8 2014 - Page 245
+			'allowAutoLogin'=>false,
+			'authTimeout' => (60*60),//3600 seconds = 1 hour
 		),
 		// uncomment the following to enable URLs in path-format
 		/*
@@ -55,7 +57,7 @@ return array(
 		// uncomment the following to use a MySQL database
 		//*
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=testdrive',
+			'connectionString' => 'mysql:host=localhost;dbname=iVote',
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => 'avatar',

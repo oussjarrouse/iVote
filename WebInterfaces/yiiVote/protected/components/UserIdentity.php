@@ -8,6 +8,19 @@
 class UserIdentity extends CUserIdentity
 {
 	/**
+	 * 
+	 * @var idSystemUser
+	 * Holds the id of the logged in User as it is in the Database
+	 */
+	private $idUser;
+	/**
+	 * Returns the id of the user as saved in the Database
+	 * @see CUserIdentity::getId()
+	 */
+	public function getId() {
+		return $this->idUser;
+	}
+	/**
 	 * Authenticates a user.
 	 * The example implementation makes sure if the username and password
 	 * are both 'demo'.
@@ -17,17 +30,20 @@ class UserIdentity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
-		$users=array(
-			// username => password
-			'demo'=>'demo',
-			'admin'=>'admin',
-		);
-		if(!isset($users[$this->username]))
+		//Get an instance of the users model
+		$user = Users::model()->findByAttributes(array('username'=>$this->username));
+		if($user === NULL){
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
-		elseif($users[$this->username]!==$this->password)
+		}
+		elseif ($user->password !== $this->password){
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
-		else
+		}
+		else{
+			//Authentication successful
 			$this->errorCode=self::ERROR_NONE;
+			//Set the idUser to the user id as it is in the database  
+			$this->idUser=$user->id;
+		}
 		return !$this->errorCode;
 	}
 }
