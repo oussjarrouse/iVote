@@ -60,7 +60,6 @@ class Elections extends CActiveRecord
 		return array(
 			'electionCommittees' => array(self::BELONGS_TO, 'ElectionCommittees', 'ElectionCommittees_id'),
 			'electionsSubs' => array(self::HAS_MANY, 'ElectionsSub', 'Elections_id'),
-			'users' => array(self::MANY_MANY, 'Users', 'Elections_has_users(Elections_id, users_id)'),
 		);
 	}
 

@@ -37,7 +37,7 @@ class Users extends CActiveRecord
 			array('password', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, username, password', 'safe', 'on'=>'search'),
+			array('id, username', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,7 +51,7 @@ class Users extends CActiveRecord
 		return array(
 			'electionCommittees' => array(self::HAS_MANY, 'ElectionCommittees', 'users_id'),
 			'electionCommitteesUsers' => array(self::MANY_MANY, 'ElectionCommittees', 'ElectionCommittees_has_users(users_id, ElectionCommittees_id)'),
-			'elections' => array(self::MANY_MANY, 'Elections', 'Elections_has_users(users_id, Elections_id)'),
+			'electionsSub' => array(self::MANY_MANY, 'Elections', 'ElectionsSub_has_users(users_id, ElectionsSub_id)'),
 			'votes' => array(self::HAS_MANY, 'Votes', 'users_id'),
 		);
 	}
