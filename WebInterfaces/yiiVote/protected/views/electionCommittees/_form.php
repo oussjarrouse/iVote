@@ -31,17 +31,19 @@
 		<?php echo $form->error($model,'description'); ?>
 	</div>
 
+<!-- 
 	<div class="row">
 		<?php echo $form->labelEx($model,'status'); ?>
 		<?php echo $form->textField($model,'status'); ?>
 		<?php echo $form->error($model,'status'); ?>
 	</div>
-
+ 
 	<div class="row">
 		<?php echo $form->labelEx($model,'users_id'); ?>
 		<?php echo $form->textField($model,'users_id'); ?>
 		<?php echo $form->error($model,'users_id'); ?>
 	</div>
+-->
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>

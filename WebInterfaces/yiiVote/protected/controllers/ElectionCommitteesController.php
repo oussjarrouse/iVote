@@ -34,7 +34,7 @@ class ElectionCommitteesController extends Controller
 			),
 			*/
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index', 'view', 'create', 'update'),
+				'actions'=>array('index', 'view', 'create', 'update', 'handover'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -65,7 +65,7 @@ class ElectionCommitteesController extends Controller
 	public function actionCreate()
 	{
 		$model=new ElectionCommittees;
-
+		
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -73,7 +73,11 @@ class ElectionCommitteesController extends Controller
 		{
 			$model->attributes=$_POST['ElectionCommittees'];
 			if($model->save())
+			{
+				//also add self to the many to many list 
+				
 				$this->redirect(array('view','id'=>$model->id));
+			}
 		}
 
 		$this->render('create',array(
@@ -108,7 +112,7 @@ class ElectionCommitteesController extends Controller
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
+	 * @param integer $id the ID of the model to be deletedx	
 	 */
 	public function actionDelete($id)
 	{
@@ -165,7 +169,71 @@ class ElectionCommitteesController extends Controller
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
-
+	
+	/**
+	 * invite users by email to be part of this election committee
+	 * if users are not registered a ghost-registration process is initiated, 
+	 * these new will get their notifications upon first login 
+	 * @param integer $id the ID of the model  which owenership to be passed
+	 * @param unknown $newOwnerID
+	 */
+	public function actionInvite($id)
+	{
+		$model = loadModel($id);
+		if(isset($_POST['ElectionCommitteeInviteeEmail']))
+		{
+			//Get the new owner email from $_POST
+			$emails = $_POST['ElectionCommitteeInviteeEmail'];
+			
+			//For $email in $emails do the following
+			//{
+				//Find emails in users list
+				$invitees = Users::model()->getUserByEmail($email);
+				if($invitee===null)
+				{
+					//Add this user the registrationInvitationList
+				}
+				else
+				{
+					$model->users_id = $invitee->user_id;
+					$model->addUser($id);
+					$model->save();
+				}
+			//}
+			//
+			//	SendEmailInvitations($shortEmailsList)
+			//
+			$this->redirect(array('view','id'=>$model->id));
+		}
+		
+		$this->render('invite',array(
+				'model'=>$model,
+		));
+	}
+	
+	/**
+	 * Passes the owenership of the ElectionsCommittee to another user
+	 * @param integer $id the ID of the model which owenership to be passed
+	 */
+	public function actionPassOwnership($id)
+	{
+		$model = loadModel($id);
+		if(isset($_POST['ElectionCommitteeNewOwner']))
+		{
+			//Get the new owner id from $_POST
+			$newOwnerId = $_POST['ElectionCommitteeNewOwner'];
+			$model->users_id = $newOwnerId;
+			//$model->addUser($id);
+			if($model->save())
+			{
+				$this->redirect(array('view','id'=>$model->id));
+			}
+		}
+		$this->render('owner',array(
+				'model'=>$model,
+		));
+	}
+	
 	/**
 	 * Performs the AJAX validation.
 	 * @param ElectionCommittees $model the model to be validated

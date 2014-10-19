@@ -70,6 +70,16 @@ class ElectionCommittees extends CActiveRecord
 			'users_id' => 'Users',
 		);
 	}
+	
+	protected function beforeSave()
+	{
+		if($this->isNewRecord())
+		{
+			$this->status = 1;// (active)
+			$this->users_id = Yii::app()->user->id;
+		}
+		return parent::befbeforeSave();
+	}
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
